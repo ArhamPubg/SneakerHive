@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class AuthText extends StatelessWidget {
+class TextWidget extends StatelessWidget {
   String text = '';
   FontWeight fontWeight;
   double size;
   Color color;
 
-  AuthText(
+  TextWidget(
       {super.key,
       required this.text,
       required this.fontWeight,

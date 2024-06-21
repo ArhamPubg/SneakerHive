@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:loading_btn/loading_btn.dart';
 import 'package:sneakerhive/Widgets/carasolwidget.dart';
-import 'package:sneakerhive/Widgets/productswidget.dart';
-import 'package:sneakerhive/Widgets/textWidget.dart';
+import 'package:sneakerhive/Widgets/productwidget.dart';
+import 'package:sneakerhive/Widgets/textwidget.dart';
 import 'package:sneakerhive/favourite_screen.dart';
 import 'package:sneakerhive/sign_up_screen.dart';
 
@@ -29,8 +29,6 @@ class _MainScreenState extends State<MainScreen> {
 
   CarasolSliderWidget carasol = const CarasolSliderWidget();
 
-  int hivenum = 0;
-
   bool isloading = false;
   @override
   void initState() {
@@ -38,25 +36,12 @@ class _MainScreenState extends State<MainScreen> {
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         isloading = false;
-        getNumbers();
       });
     });
     super.initState();
   }
 
   bool priceorder = false;
-
-  Future<void> getNumbers() async {
-    int numberOfItems = await getNumberOfItemsInBox('favbox');
-    setState(() {
-      hivenum = numberOfItems;
-    });
-  }
-
-  Future<int> getNumberOfItemsInBox(String boxName) async {
-    var box = await Hive.openBox(boxName);
-    return box.keys.length;
-  }
 
   void logout() async {
     try {
@@ -76,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 40,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
@@ -103,36 +89,12 @@ class _MainScreenState extends State<MainScreen> {
                         MaterialPageRoute(
                             builder: (context) => FavouriteScreen()));
                   },
-                  child: Stack(
-                    children: [
-                      const Center(
-                        child: Icon(
-                          CupertinoIcons.cart,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 15,
-                          width: 15,
-                          child: Center(
-                            child: Text(
-                              hivenum.toString(),
-                              style: GoogleFonts.cabin(
-                                  textStyle: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                  child: const Center(
+                    child: Icon(
+                      CupertinoIcons.cart,
+                      size: 20,
+                      color: Colors.white,
+                    ),
                   ),
                 )),
           ),
@@ -151,7 +113,7 @@ class _MainScreenState extends State<MainScreen> {
                         logout();
                       },
                       child: Center(
-                        child: AuthText(
+                        child: TextWidget(
                             text: 'Logout',
                             fontWeight: FontWeight.bold,
                             size: 12,

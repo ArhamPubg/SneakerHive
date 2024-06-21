@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sneakerhive/Model/user_model.dart';
-import 'package:sneakerhive/Widgets/small_widgets.dart';
-import 'package:sneakerhive/Widgets/textWidget.dart';
+import 'package:sneakerhive/Widgets/authentication_widgets.dart';
+import 'package:sneakerhive/Widgets/textwidget.dart';
 import 'package:sneakerhive/signin.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -128,14 +128,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       return Column(
                         children: [
                           Center(
-                              child: AuthText(
+                              child: TextWidget(
                                   text: userData['title'],
                                   fontWeight: FontWeight.bold,
                                   size: 30,
                                   color: Colors.white)),
                           const SizedBox(height: 5),
                           Center(
-                              child: AuthText(
+                              child: TextWidget(
                                   text: userData['subtitle'],
                                   fontWeight: FontWeight.w400,
                                   size: 19,
@@ -145,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             padding: const EdgeInsets.only(left: 20, top: 20),
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: AuthText(
+                                child: TextWidget(
                                     text: userData['name'],
                                     fontWeight: FontWeight.w700,
                                     size: 18,
@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             padding: const EdgeInsets.only(left: 20, top: 20),
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: AuthText(
+                                child: TextWidget(
                                     text: userData['email'],
                                     fontWeight: FontWeight.w700,
                                     size: 18,
@@ -175,7 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             padding: const EdgeInsets.only(left: 20, top: 20),
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: AuthText(
+                                child: TextWidget(
                                     text: userData['password'],
                                     fontWeight: FontWeight.w700,
                                     size: 18,
@@ -218,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                AuthText(
+                                TextWidget(
                                     text: userData['account'],
                                     fontWeight: FontWeight.w300,
                                     size: 14,
@@ -233,7 +233,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 const SignInScreen()),
                                       );
                                     },
-                                    child: AuthText(
+                                    child: TextWidget(
                                         text: userData['signin'],
                                         fontWeight: FontWeight.w300,
                                         size: 14,

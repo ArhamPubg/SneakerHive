@@ -1,12 +1,10 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserPassTextField extends StatefulWidget {
-  dynamic node;
-  TextEditingController controller;
+  final dynamic node;
+  final TextEditingController controller;
   dynamic isclicked;
   String error = '';
   UserPassTextField(
@@ -82,10 +80,7 @@ class UserTextField extends StatefulWidget {
   TextEditingController controller;
   String error = '';
   UserTextField(
-      {super.key,
-      required this.node,
-      required this.controller,
-      required this.error});
+      {super.key, this.node, required this.controller, required this.error});
 
   @override
   State<UserTextField> createState() => _UserTextFieldState();
@@ -97,9 +92,9 @@ class _UserTextFieldState extends State<UserTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: TextFormField(
-        onFieldSubmitted: (value) {
-                                FocusScope.of(context).requestFocus(widget.node);
-                              },
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(widget.node);
+          },
           cursorColor: Colors.black,
           style: GoogleFonts.cabin(
             textStyle: const TextStyle(),
@@ -133,6 +128,46 @@ class _UserTextFieldState extends State<UserTextField> {
             }
             return null;
           }),
+    );
+  }
+}
+
+class Button extends StatelessWidget {
+  final String button;
+  final double size;
+  final FontWeight textweight;
+  final Color textcolor;
+  final Color buttonbackgroundcolor;
+  final Color buttonforebackgroundcolor;
+  final void Function()? ontap;
+  const Button(
+      {super.key,
+      required this.button,
+      required this.size,
+      required this.textweight,
+      required this.textcolor,
+      required this.ontap,
+      required this.buttonbackgroundcolor,
+      required this.buttonforebackgroundcolor});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: ontap,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        backgroundColor: buttonbackgroundcolor,
+        foregroundColor: buttonforebackgroundcolor,
+        fixedSize: const Size(340, 50), // Set height and width
+      ),
+      child: Text(button,
+          style: GoogleFonts.cabin(
+            textStyle: TextStyle(
+              fontWeight: textweight,
+              fontSize: size,
+              color: textcolor,
+            ),
+          )),
     );
   }
 }

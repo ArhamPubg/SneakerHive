@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  var color;
-   FavouriteScreen({Key? key, this.color}) : super(key: key);
+  const FavouriteScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<FavouriteScreen> createState() => _FavouriteScreenState();
@@ -113,8 +114,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                             history[index]['key']);
                                       },
                                       child: Icon(
-                                        CupertinoIcons.heart_solid,
-                                        color: widget.color,
+                                        CupertinoIcons.clear,
+                                        color: Colors.black,
                                         size: 20,
                                       ),
                                     ),

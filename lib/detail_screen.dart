@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
-import 'package:sneakerhive/favourite_screen.dart';
 
 // ignore: must_be_immutable
 class ShoesDetailScreen extends StatefulWidget {
@@ -53,7 +53,7 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
       );
     } else if (existingProduct != null) {
       showToast(
-        'The Products exist in the cart from the beginning',
+        'Product Already exist in the Cart',
         context: context,
         animation: StyledToastAnimation.scale,
         reverseAnimation: StyledToastAnimation.fadeScale,
@@ -70,44 +70,6 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.5),
-            child: Container(
-                height: 40,
-                width: 37,
-                decoration: BoxDecoration(
-                  color: isclicked ? Colors.white : Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: InkWell(
-                  onTap: () async {
-                    setState(() {
-                      isclicked = !isclicked;
-                    });
-                    await storedatatohive({
-                      'image': widget.image,
-                      'title': widget.title,
-                      'price': widget.price
-                    });
-
-                    // ignore: use_build_context_synchronously
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                FavouriteScreen(color: isclicked)));
-                  },
-                  child: Center(
-                    child: Icon(
-                      CupertinoIcons.heart_solid,
-                      size: 20,
-                      color: isclicked ? Colors.black : Colors.white,
-                    ),
-                  ),
-                )),
-          ),
-        ],
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconButton(
@@ -270,7 +232,28 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
                         textStyle:
                             const TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                  onPressed: () async {}),
+                  onPressed: () async {
+                    User? user = FirebaseAuth.instance.currentUser;
+                    if (user == null) {
+                      showToast(
+                        "Guest can't add to cart a Product",
+                        context: context,
+                        animation: StyledToastAnimation.scale,
+                        reverseAnimation: StyledToastAnimation.fadeScale,
+                        position: StyledToastPosition.top,
+                        animDuration: const Duration(seconds: 1),
+                        duration: const Duration(seconds: 3),
+                        curve: Curves.elasticOut,
+                        reverseCurve: Curves.linear,
+                      );
+                    } else {
+                      await storedatatohive({
+                        'image': widget.image,
+                        'title': widget.title,
+                        'price': widget.price
+                      });
+                    }
+                  }),
             ),
           )
         ],
