@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneakerhive/favouriteManager.dart';
 import 'package:sneakerhive/favourite_screen.dart';
 
@@ -60,9 +61,9 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
         curve: Curves.elasticOut,
         reverseCurve: Curves.linear,
       );
-    } else if (user != null && onFavTap == false) {
+    } else if (user != null && !onFavTap) {
       setState(() {
-        onFavTap = !onFavTap;
+        onFavTap = true;
       });
       await FavoriteManager.setFavoriteStatus(widget.productId, onFavTap);
 
@@ -77,16 +78,13 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
         curve: Curves.elasticOut,
         reverseCurve: Curves.linear,
       );
-      await getProductIds(widget.productId);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FavouriteScreen(
-                  productId: widget.productId, isclicked: true)));
+      await _addProductToFavorites(widget.productId);
     } else {
       setState(() {
         onFavTap = false;
       });
+
+      await FavoriteManager.setFavoriteStatus(widget.productId, onFavTap);
 
       showToast(
         "Item Removed from your WishList",
@@ -99,13 +97,26 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
         curve: Curves.elasticOut,
         reverseCurve: Curves.linear,
       );
-      await deleteProductIds(widget.productId);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FavouriteScreen(
-                  productId: widget.productId, isclicked: true)));
+      await _removeProductFromFavorites(widget.productId);
     }
+  }
+
+  Future<void> _addProductToFavorites(String productId) async {
+    await FirebaseFirestore.instance
+        .collection('UserAuth')
+        .doc(user!.uid)
+        .collection('VendorFavProducts')
+        .doc(productId)
+        .set({'productId': productId});
+  }
+
+  Future<void> _removeProductFromFavorites(String productId) async {
+    await FirebaseFirestore.instance
+        .collection('UserAuth')
+        .doc(user!.uid)
+        .collection('VendorFavProducts')
+        .doc(productId)
+        .delete();
   }
 
   @override
@@ -203,7 +214,7 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
                     ),
                     RatingBar.builder(
                       itemSize: 17,
-                      initialRating: 5,
+                      initialRating: stars,
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
@@ -213,13 +224,10 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      onRatingUpdate: (rating) async {
+                      onRatingUpdate: (rating) {
                         setState(() {
                           stars = rating;
                         });
-                        // await StarsManager.setStarsStatus(
-                        //     widget.productId, stars);
-                        // await StarsManager.getStarsStatus(widget.productId);
                       },
                     )
                   ],
@@ -310,32 +318,14 @@ class _ShoesDetailScreenState extends State<ShoesDetailScreen> {
                         curve: Curves.elasticOut,
                         reverseCurve: Curves.linear,
                       );
-                    } else {}
+                    } else {
+                      // Add to cart logic here
+                    }
                   }),
             ),
           )
         ],
       ),
     );
-  }
-
-  Future<void> getProductIds(String productId) async {
-    await FirebaseFirestore.instance
-        .collection('UserAuth')
-        .doc(user!.uid)
-        .collection('VendorFavProducts')
-        .doc(productId)
-        .set({
-      'productId': productId,
-    });
-  }
-
-  Future<void> deleteProductIds(String productId) async {
-    await FirebaseFirestore.instance
-        .collection('UserAuth')
-        .doc(user!.uid)
-        .collection('VendorFavProducts')
-        .doc(productId)
-        .delete();
   }
 }

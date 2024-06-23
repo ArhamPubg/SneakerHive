@@ -17,8 +17,8 @@ class _BottamBarState extends State<BottamBar> {
   List<Widget> pages = [
     const MainScreen(),
     FavouriteScreen(), // Ensure this screen handles null safely
-    FavouriteScreen(), // Duplicate for demo purposes
-    FavouriteScreen(), // Duplicate for demo purposes
+    SizedBox.shrink(),
+    SizedBox.shrink()
   ];
 
   @override

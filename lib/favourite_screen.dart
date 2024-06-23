@@ -97,82 +97,49 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                               color: const Color(0xffF6F6F6),
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            child: Stack(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Positioned(
-                                  left: 130,
-                                  top: 12,
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      showToast(
-                                        'Item will be Removed From WishList',
-                                        context: context,
-                                        animation: StyledToastAnimation.scale,
-                                        reverseAnimation:
-                                            StyledToastAnimation.fadeScale,
-                                        position: StyledToastPosition.top,
-                                        animDuration:
-                                            const Duration(seconds: 1),
-                                        duration: const Duration(seconds: 3),
-                                        curve: Curves.elasticOut,
-                                        reverseCurve: Curves.linear,
-                                      );
-                                      await deleteProductIds(
-                                          widget.productId, user!.uid);
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.heart_solid,
-                                      color: Colors.red,
-                                      size: 20,
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 18),
+                                  child: Transform.rotate(
+                                    angle: 12,
+                                    child: Image.network(productData['image']),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      productData['title'],
+                                      style: GoogleFonts.cabin(
+                                        textStyle: const TextStyle(
+                                          fontSize: 17,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 18),
-                                      child: Transform.rotate(
-                                        angle: 12,
-                                        child:
-                                            Image.network(productData['image']),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 12),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          productData['title'],
-                                          style: GoogleFonts.cabin(
-                                            textStyle: const TextStyle(
-                                              fontSize: 17,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 13, top: 3),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '\$${productData['price']}',
+                                      style: GoogleFonts.cabin(
+                                        textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 13, top: 3),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          '\$${productData['price']}',
-                                          style: GoogleFonts.cabin(
-                                            textStyle: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),
