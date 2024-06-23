@@ -21,10 +21,6 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final FocusNode node1 = FocusNode();
-  final FocusNode node2 = FocusNode();
-  final FocusNode node3 = FocusNode();
-
   bool tap = false;
   bool isLoading = false;
   bool isClicked = false;
@@ -49,9 +45,6 @@ class _SignInScreenState extends State<SignInScreen> {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    node1.dispose();
-    node2.dispose();
-    node3.dispose();
   }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -110,7 +103,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     builder: (context, userDataSnapshot) {
                       if (userDataSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(
+                            child: CupertinoActivityIndicator(
+                              color: Colors.white,
+                            ));
                       }
                       if (userDataSnapshot.hasError) {
                         Fluttertoast.showToast(
@@ -151,7 +147,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           const SizedBox(height: 8),
                           UserTextField(
-                              node: node2,
                               controller: emailController,
                               error: 'Please enter your Email'),
                           Padding(
@@ -167,7 +162,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           const SizedBox(height: 8),
                           UserPassTextField(
                               isclicked: isClicked,
-                              node: node3,
                               controller: passwordController,
                               error: 'Please enter your Password'),
                           Padding(

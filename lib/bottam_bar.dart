@@ -12,13 +12,13 @@ class BottamBar extends StatefulWidget {
 }
 
 class _BottamBarState extends State<BottamBar> {
-  int currentIndex = 0; // Declare currentIndex variable here
+  int currentIndex = 0;
 
   List<Widget> pages = [
     const MainScreen(),
-     FavouriteScreen(),
-   FavouriteScreen(),
-     FavouriteScreen()
+    FavouriteScreen(), // Ensure this screen handles null safely
+    FavouriteScreen(), // Duplicate for demo purposes
+    FavouriteScreen(), // Duplicate for demo purposes
   ];
 
   @override
@@ -28,8 +28,11 @@ class _BottamBarState extends State<BottamBar> {
       bottomNavigationBar: SalomonBottomBar(
         backgroundColor: Colors.white,
         currentIndex: currentIndex,
-        onTap: (int index) => setState(() =>
-            currentIndex = index), // Update currentIndex when a tab is tapped
+        onTap: (int index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
         items: [
           SalomonBottomBarItem(
             icon: const Icon(CupertinoIcons.home),

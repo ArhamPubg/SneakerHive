@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sneakerhive/detail_screen.dart';
 
 class ProductWidget extends StatefulWidget {
- final String search;
- final  dynamic category;
- final dynamic orderprice;
+  final String search;
+  final dynamic category;
+  final dynamic orderprice;
   const ProductWidget(
       {super.key, required this.search, this.category, this.orderprice});
 
@@ -65,6 +66,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                         title: data[index]['title'],
                         price: data[index]['price'],
                         desc: data[index]['description'],
+                        productId : data[index]['productId']
                       ),
                     ),
                   );

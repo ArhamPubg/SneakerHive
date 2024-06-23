@@ -1,22 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  const FavouriteScreen({
-    Key? key,
-  }) : super(key: key);
+  final String? productId;
+  final bool? isclicked;
+  const FavouriteScreen({Key? key, this.productId, this.isclicked})
+      : super(key: key);
 
   @override
   State<FavouriteScreen> createState() => _FavouriteScreenState();
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  List<Map<String, dynamic>> history = [];
-
-  final box = Hive.box('favbox');
   bool isloading = false;
+
   @override
   void initState() {
     super.initState();
@@ -26,28 +28,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         isloading = false;
       });
     });
-    _refreshhistory();
   }
 
-  void _refreshhistory() {
-    final data = box.keys.map((key) {
-      final value = box.get(key);
-      return {
-        "key": key,
-        "image": value["image"],
-        "title": value["title"],
-        "price": value["price"]
-      };
-    }).toList();
-    setState(() {
-      history = data.reversed.toList();
-    });
-  }
-
-  Future<void> _deletevalue(key) async {
-    await box.delete(key);
-    _refreshhistory();
-  }
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +38,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         elevation: 0,
+        automaticallyImplyLeading: widget.isclicked == true ? true : false,
         title: Text(
           'Favourites',
           style: GoogleFonts.cabin(
@@ -64,121 +48,179 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           ),
         ),
       ),
-      body: history.isEmpty
-          ? isloading
-              ? const Center(
-                  child: CupertinoActivityIndicator(),
-                )
-              : Center(
-                  child: Text(
-                    'No Product Found',
-                    style: GoogleFonts.cabin(
-                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                        fontSize: 22),
-                  ),
-                )
-          : isloading
-              ? const Center(
-                  child: CupertinoActivityIndicator(),
-                )
-              : Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: fetchProductsByUserId(
+                    FirebaseAuth.instance.currentUser!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CupertinoActivityIndicator());
+                  } else if (snapshot.hasError) {
+                    Fluttertoast.showToast(msg: 'Error : ${snapshot.error}');
+                    return const Center(child: Text('An error occurred.'));
+                  }
+
+                  if (!snapshot.hasData ||
+                      snapshot.data == null ||
+                      snapshot.data!.isEmpty) {
+                    return Center(
+                        child: Text(
+                      'No Item in WishList',
+                      style: GoogleFonts.cabin(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                    ));
+                  }
+
+                  List<Map<String, dynamic>> data = snapshot.data!;
+
+                  return GridView.builder(
+                    itemCount: data.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 15,
+                      mainAxisExtent: 245,
                     ),
-                    Expanded(
-                      child: GridView.builder(
-                        itemCount: history.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 15,
-                          mainAxisExtent: 245,
-                        ),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xffF6F6F6),
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 130,
-                                    top: 12,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        await _deletevalue(
-                                            history[index]['key']);
-                                      },
-                                      child: Icon(
-                                        CupertinoIcons.clear,
-                                        color: Colors.black,
-                                        size: 20,
-                                      ),
+                    itemBuilder: (context, index) {
+                      var productData = data[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffF6F6F6),
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 130,
+                                  top: 12,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      showToast(
+                                        'Item will be Removed From WishList',
+                                        context: context,
+                                        animation: StyledToastAnimation.scale,
+                                        reverseAnimation:
+                                            StyledToastAnimation.fadeScale,
+                                        position: StyledToastPosition.top,
+                                        animDuration:
+                                            const Duration(seconds: 1),
+                                        duration: const Duration(seconds: 3),
+                                        curve: Curves.elasticOut,
+                                        reverseCurve: Curves.linear,
+                                      );
+                                      await deleteProductIds(
+                                          widget.productId, user!.uid);
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.heart_solid,
+                                      color: Colors.red,
+                                      size: 20,
                                     ),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 18),
-                                        child: Transform.rotate(
-                                          angle: 12,
-                                          child: Image.network(
-                                              history[index]['image']),
-                                        ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 18),
+                                      child: Transform.rotate(
+                                        angle: 12,
+                                        child:
+                                            Image.network(productData['image']),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 12),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            history[index]['title'],
-                                            style: GoogleFonts.cabin(
-                                              textStyle: const TextStyle(
-                                                fontSize: 17,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 12),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          productData['title'],
+                                          style: GoogleFonts.cabin(
+                                            textStyle: const TextStyle(
+                                              fontSize: 17,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 13, top: 3),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '\$${history[index]['price']}',
-                                            style: GoogleFonts.cabin(
-                                              textStyle: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 13, top: 3),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          '\$${productData['price']}',
+                                          style: GoogleFonts.cabin(
+                                            textStyle: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+          )
+        ],
+      ),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchProductsByUserId(
+      String userId) async {
+    List<Map<String, dynamic>> products = [];
+    try {
+      QuerySnapshot userProductReference = await FirebaseFirestore.instance
+          .collection('UserAuth')
+          .doc(userId)
+          .collection('VendorFavProducts')
+          .get();
+
+      for (var userproductId in userProductReference.docs) {
+        DocumentSnapshot reference = await FirebaseFirestore.instance
+            .collection('Products')
+            .doc(userproductId['productId'])
+            .get();
+
+        if (reference.exists) {
+          products.add(reference.data() as Map<String, dynamic>);
+        }
+      }
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(msg: 'Error : $e');
+    }
+
+    return products;
+  }
+
+  Future<void> deleteProductIds(productId, user) async {
+    await FirebaseFirestore.instance
+        .collection('UserAuth')
+        .doc(user)
+        .collection('VendorFavProducts')
+        .doc(productId)
+        .delete();
   }
 }

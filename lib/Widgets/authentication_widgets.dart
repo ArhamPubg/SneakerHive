@@ -3,13 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserPassTextField extends StatefulWidget {
-  final dynamic node;
   final TextEditingController controller;
   dynamic isclicked;
   String error = '';
   UserPassTextField(
       {super.key,
-      required this.node,
       required this.controller,
       required this.isclicked,
       required this.error});
@@ -28,7 +26,6 @@ class _UserPassTextFieldState extends State<UserPassTextField> {
           style: GoogleFonts.cabin(
             textStyle: const TextStyle(),
           ),
-          focusNode: widget.node,
           controller: widget.controller,
           autocorrect: true,
           obscureText: widget.isclicked,

@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:loading_btn/loading_btn.dart';
 import 'package:sneakerhive/Widgets/carasolwidget.dart';
 import 'package:sneakerhive/Widgets/productwidget.dart';

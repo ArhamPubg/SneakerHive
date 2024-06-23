@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sneakerhive/Model/user_model.dart';
 import 'package:sneakerhive/Widgets/authentication_widgets.dart';
 import 'package:sneakerhive/Widgets/textwidget.dart';
+import 'package:sneakerhive/bottam_bar.dart';
+import 'package:sneakerhive/main_screen.dart';
 import 'package:sneakerhive/signin.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -88,12 +90,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.white)),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const BottamBar()));
+              },
+              icon: const Icon(
+                CupertinoIcons.home,
+                size: 18,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
         iconTheme: const IconThemeData(
           color: Colors.white, // Set your desired color here
         ),
         scrolledUnderElevation: 0,
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.black,
       body: isLoading
@@ -184,7 +204,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           const SizedBox(height: 8),
                           UserPassTextField(
                               isclicked: isClicked,
-                              node: node3,
                               controller: passwordController,
                               error: 'Please enter your Password'),
                           Padding(
