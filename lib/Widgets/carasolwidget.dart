@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -89,9 +90,8 @@ class _CarasolSliderWidgetState extends State<CarasolSliderWidget> {
                                 padding: const EdgeInsets.all(10),
                                 width: 40,
                                 height: 40,
-                                child: const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
+                                child: const CupertinoActivityIndicator(
+                                  color: Colors.white,
                                 ),
                               ),
                               child: Text('Shop Now',

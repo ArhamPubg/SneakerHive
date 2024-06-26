@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:sneakerhive/favourite_screen.dart';
-import 'package:sneakerhive/main_screen.dart';
+import 'package:sneakerhive/Screens/Favourites/favourite_screen.dart';
+import 'package:sneakerhive/Screens/main_screen.dart';
 
 class BottamBar extends StatefulWidget {
   const BottamBar({Key? key}) : super(key: key);
@@ -15,8 +15,8 @@ class _BottamBarState extends State<BottamBar> {
   int currentIndex = 0;
 
   List<Widget> pages = [
-    const MainScreen(),
-    FavouriteScreen(), // Ensure this screen handles null safely
+    MainScreen(),
+    FavouriteScreen(),
     SizedBox.shrink(),
     SizedBox.shrink()
   ];
@@ -40,13 +40,13 @@ class _BottamBarState extends State<BottamBar> {
             selectedColor: Colors.black,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(CupertinoIcons.shopping_cart),
-            title: const Text("Shop"),
+            icon: const Icon(CupertinoIcons.heart),
+            title: const Text("Favourite"),
             selectedColor: Colors.black,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(CupertinoIcons.heart),
-            title: const Text("Favourite"),
+            icon: const Icon(CupertinoIcons.shopping_cart),
+            title: const Text("Shop"),
             selectedColor: Colors.black,
           ),
           SalomonBottomBarItem(

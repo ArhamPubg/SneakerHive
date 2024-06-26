@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sneakerhive/detail_screen.dart';
+import 'package:sneakerhive/Screens/detail_screen.dart';
 
 class ProductWidget extends StatefulWidget {
   final String search;
@@ -28,7 +28,10 @@ class _ProductWidgetState extends State<ProductWidget> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CupertinoActivityIndicator(
+            color: Colors.black,
+          ));
         } else if (snapshot.hasError) {
           Fluttertoast.showToast(msg: 'Error : ${snapshot.error}');
           return Center(
@@ -62,12 +65,11 @@ class _ProductWidgetState extends State<ProductWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (builder) => ShoesDetailScreen(
-                        image: data[index]['image'],
-                        title: data[index]['title'],
-                        price: data[index]['price'],
-                        desc: data[index]['description'],
-                        productId : data[index]['productId']
-                      ),
+                          image: data[index]['image'],
+                          title: data[index]['title'],
+                          price: data[index]['price'],
+                          desc: data[index]['description'],
+                          productId: data[index]['productId']),
                     ),
                   );
                 },

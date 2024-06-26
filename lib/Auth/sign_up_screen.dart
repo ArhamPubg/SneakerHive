@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sneakerhive/Auth/signin.dart';
 import 'package:sneakerhive/Model/user_model.dart';
 import 'package:sneakerhive/Widgets/authentication_widgets.dart';
 import 'package:sneakerhive/Widgets/textwidget.dart';
-import 'package:sneakerhive/bottam_bar.dart';
-import 'package:sneakerhive/main_screen.dart';
-import 'package:sneakerhive/signin.dart';
+import 'package:sneakerhive/Screens/bottam_bar.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -59,9 +59,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _auth = FirebaseAuth.instance;
   signup(email, password) async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
       await postDatatoFirebase();
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BottamBar()));
+      showToast(
+        "Successfully Sign Up",
+        context: context,
+        animation: StyledToastAnimation.scale,
+        reverseAnimation: StyledToastAnimation.fadeScale,
+        position: StyledToastPosition.top,
+        animDuration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 4),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.linear,
+      );
+      setState(() {
+        isLoading = false;
+      });
     } on FirebaseAuthException catch (e) {
       setState(() {
         isLoading = false;
@@ -132,7 +153,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     builder: (context, userDataSnapshot) {
                       if (userDataSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(
+                            child: CupertinoActivityIndicator());
                       }
                       if (userDataSnapshot.hasError) {
                         Fluttertoast.showToast(

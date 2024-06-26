@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_btn/loading_btn.dart';
+import 'package:sneakerhive/Auth/sign_up_screen.dart';
 import 'package:sneakerhive/Widgets/carasolwidget.dart';
 import 'package:sneakerhive/Widgets/productwidget.dart';
 import 'package:sneakerhive/Widgets/textwidget.dart';
-import 'package:sneakerhive/favourite_screen.dart';
-import 'package:sneakerhive/sign_up_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -82,12 +81,7 @@ class _MainScreenState extends State<MainScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FavouriteScreen()));
-                  },
+                  onTap: () {},
                   child: const Center(
                     child: Icon(
                       CupertinoIcons.cart,
@@ -209,9 +203,10 @@ class _MainScreenState extends State<MainScreen> {
                             padding: const EdgeInsets.all(10),
                             width: 47,
                             height: 49,
-                            child: const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            child: Center(
+                              child: const CupertinoActivityIndicator(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           child: Container(

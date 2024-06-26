@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:sneakerhive/bottam_bar.dart';
+import 'package:sneakerhive/Screens/bottam_bar.dart';
 import 'package:sneakerhive/firebase_options.dart';
 
 void main() async {

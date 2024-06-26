@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sneakerhive/Auth/signin.dart';
 import 'package:sneakerhive/Widgets/authentication_widgets.dart';
 import 'package:sneakerhive/Widgets/textwidget.dart';
-import 'package:sneakerhive/signin.dart';
 
 class RecoveryPassword extends StatefulWidget {
   const RecoveryPassword({super.key});
@@ -35,9 +35,7 @@ class _RecoveryPasswordState extends State<RecoveryPassword> {
                     .doc('recoverypassword')
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
+                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data == null) {
                     return const Center(child: Text('No data available'));

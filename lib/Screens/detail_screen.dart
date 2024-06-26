@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sneakerhive/favouriteManager.dart';
-import 'package:sneakerhive/favourite_screen.dart';
+import 'package:sneakerhive/Manager/favouriteManager.dart';
 
 class ShoesDetailScreen extends StatefulWidget {
   final dynamic image;

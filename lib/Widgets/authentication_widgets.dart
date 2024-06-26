@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,8 +75,8 @@ class _UserPassTextFieldState extends State<UserPassTextField> {
 }
 
 class UserTextField extends StatefulWidget {
-  dynamic node;
-  TextEditingController controller;
+ final dynamic node;
+ final TextEditingController controller;
   String error = '';
   UserTextField(
       {super.key, this.node, required this.controller, required this.error});

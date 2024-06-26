@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sneakerhive/Auth/recovery_password.dart';
+import 'package:sneakerhive/Screens/main_screen.dart';
 import 'package:sneakerhive/Widgets/authentication_widgets.dart';
 import 'package:sneakerhive/Widgets/textwidget.dart';
-import 'package:sneakerhive/bottam_bar.dart';
-import 'package:sneakerhive/main_screen.dart';
-import 'package:sneakerhive/recovery_password.dart';
+import 'package:sneakerhive/Screens/bottam_bar.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -101,13 +101,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         .doc('LoginSystem')
                         .snapshots(),
                     builder: (context, userDataSnapshot) {
-                      if (userDataSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(
-                            child: CupertinoActivityIndicator(
-                              color: Colors.white,
-                            ));
-                      }
                       if (userDataSnapshot.hasError) {
                         Fluttertoast.showToast(
                             msg: 'Error : ${userDataSnapshot.error}');
@@ -291,7 +284,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
-Future<UserCredential?> loginwithgoogle() async {
+Future loginwithgoogle() async {
   try {
     final googleuser = await GoogleSignIn().signIn();
 
